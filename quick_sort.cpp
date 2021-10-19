@@ -1,4 +1,6 @@
-#include <bits/stdc++.h>
+#include <cstdlib>
+#include <iostream>
+#include<time.h>
 
 using namespace std;
 
@@ -8,29 +10,38 @@ void swap(int *a, int *b) {
 	*b = temp;
 }
 
-int pivot(int arr[], int left, int right) {
-	int p = arr[right];
-	int i = left - 1;
+int pivot(int arr[], int low, int high) {
+	int pivot = arr[high];
+	int i = low - 1;
 
-	for (int j = left; j < right; j++) {
-		if (arr[j] < p) {
+	for (int j = low; j < high; j++) {
+		if (arr[j] <= pivot) {
 			i++;
 			swap(&arr[i], &arr[j]);
 		}
 	}
-	swap(&arr[i+1], &arr[right]);
+	swap(&arr[i+1], &arr[high]);
 
-	return i+1;
+	return (i+1);
 }
 
-void quickSort(int arr[], int left, int right) {
-	if (left > right)
-		return;
+int partition_r(int arr[], int low, int high){
+	srand(time(NULL));
+	int random = low + rand() % (high - low);
 
-	int p = pivot(arr, left, right);
+	swap(&arr[random], &arr[high]);
 
-	quickSort(arr, left, p - 1);
-	quickSort(arr, p + 1, right);
+	return pivot(arr, low, high);
+}
+
+void quickSort(int arr[], int low, int high) {
+	if (low < high){
+
+		int p = partition_r(arr, low, high);
+
+		quickSort(arr, low, p - 1);
+		quickSort(arr, p + 1, high);
+	}
 }
 
 int main()
@@ -40,12 +51,14 @@ int main()
 	cin >> n;
 
 	int arr[n];
-	cout << "Enter the elements : \n";
-	for (int i=0 ; i<n ; i++)
+	cout << "Enter the elements\n";
+	for (int i=0 ; i<n ; i++){
+		printf("%d). ",i+1);
 		cin >> arr[i];
+	}
 
 	quickSort(arr, 0, n - 1);
-	cout << "Sorted list of elements is : ";
+	cout << "\nSorted list of elements are : ";
 	for (int i=0 ; i<n ; i++)
 		cout << arr[i] << " ";
 
